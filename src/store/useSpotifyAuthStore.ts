@@ -8,7 +8,7 @@ interface AuthState {
 
 const useSpotifyAuthStore = create<AuthState>((set) => ({
   token: null,
-  setToken: (token:any) => set({ token }),
+  setToken: (token) => set({ token }),
   clearToken: () => set({ token: null }),
 }));
 
