@@ -1,9 +1,16 @@
-// /src/app/api/spotify/callback/route.ts
+"use client";
+
 import { NextRequest, NextResponse } from 'next/server';
+import useSpotifyAuthStore from '@/store/useSpotifyAuthStore';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const setToken = useSpotifyAuthStore((state:any) => state.setToken)
   const code = searchParams.get('code');
+  const router = useRouter();
 
   if (!code) {
     return NextResponse.json({ error: 'Authorization code is missing' });
@@ -39,22 +46,20 @@ export async function GET(request: NextRequest) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    // Fetch user data from Spotify using the access token
+    setToken(accessToken)
+
     const userResponse = await fetch('https://api.spotify.com/v1/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
 
-    if (!userResponse.ok) {
-      throw new Error(`Failed to fetch user data: ${userResponse.statusText}`);
-    }
 
-    const userData = await userResponse.json();
+    useEffect(() => {
+      router.push('/')
+    }, [router]);
 
-    return NextResponse.json(userData);
   } catch (error) {
-    console.error('Error during Spotify authentication:', error);
     return NextResponse.json({ error: 'Failed to authenticate with Spotify' });
   }
 }
