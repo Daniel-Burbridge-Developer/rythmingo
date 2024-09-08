@@ -1,14 +1,30 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 
+interface SpotifyPlayerOptions {
+  name: string;
+  getOAuthToken: (cb: (token: string) => void) => void;
+  volume?: number;
+}
+
+interface SpotifyPlayer {
+  addListener: (event: string, callback: (data: any) => void) => void;
+  connect: () => Promise<void>;
+  disconnect: () => void;
+  togglePlay: () => Promise<void>;
+  play: (options: { uris: string[] }) => Promise<void>;
+}
+
 declare global {
   interface Window {
-    Spotify: any;
+    Spotify: {
+      Player: new (options: SpotifyPlayerOptions) => SpotifyPlayer;
+    };
   }
 }
 
 const SpotifyPlayer: React.FC<{ accessToken: string }> = ({ accessToken }) => {
-  const [player, setPlayer] = useState<any>(null);
+  const [player, setPlayer] = useState<SpotifyPlayer | null>(null);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -17,29 +33,29 @@ const SpotifyPlayer: React.FC<{ accessToken: string }> = ({ accessToken }) => {
     const initializePlayer = () => {
       const spotifyPlayer = new window.Spotify.Player({
         name: 'Web Playback SDK',
-        getOAuthToken: (cb: (token: string) => void) => {
+        getOAuthToken: (cb) => {
           cb(accessToken);
         },
         volume: 0.5,
       });
 
-      spotifyPlayer.addListener('initialization_error', ({ message }: any) => {
+      spotifyPlayer.addListener('initialization_error', ({ message }) => {
         console.error('Initialization Error:', message);
       });
-      spotifyPlayer.addListener('authentication_error', ({ message }: any) => {
+      spotifyPlayer.addListener('authentication_error', ({ message }) => {
         console.error('Authentication Error:', message);
       });
-      spotifyPlayer.addListener('account_error', ({ message }: any) => {
+      spotifyPlayer.addListener('account_error', ({ message }) => {
         console.error('Account Error:', message);
       });
-      spotifyPlayer.addListener('playback_error', ({ message }: any) => {
+      spotifyPlayer.addListener('playback_error', ({ message }) => {
         console.error('Playback Error:', message);
       });
 
-      spotifyPlayer.addListener('player_state_changed', (state: any) => {
+      spotifyPlayer.addListener('player_state_changed', (state) => {
         console.log('Player State Changed:', state);
       });
-      spotifyPlayer.addListener('ready', ({ device_id }: any) => {
+      spotifyPlayer.addListener('ready', ({ device_id }) => {
         console.log('Player is ready:', device_id);
         setPlayer(spotifyPlayer);
       });
