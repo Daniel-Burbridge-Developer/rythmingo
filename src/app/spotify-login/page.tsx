@@ -4,7 +4,7 @@ import SpotifyPlayer from '../components/spotifyPlayer';
 
 export default function LoginPage() {
   const [accessToken, setAccessToken] = useState('');
-  const SPOTIFY_AUTH_URL = `https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.SPOTIFY_REDIRECT_URI || '')}&scope=user-read-private user-read-email`;
+  const SPOTIFY_AUTH_URL = `https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.SPOTIFY_REDIRECT_URI || '')}&scope=user-read-private user-read-email streaming app-remote-control user-modify-playback-state user-read-playback-state`;
 
   useEffect(() => {
     console.log('Use Effect Triggered');
