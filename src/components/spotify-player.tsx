@@ -13,13 +13,6 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Play, Pause, SkipBack, SkipForward } from 'lucide-react';
 
-// Define types for Spotify objects
-type SpotifyTrack = {
-  name: string;
-  artists: { name: string }[];
-  album: { name: string };
-};
-
 type SpotifyPlaylist = {
   id: string;
   name: string;
@@ -30,7 +23,7 @@ type SpotifyPlayerProps = {
 };
 
 export function SpotifyPlayer({ accessToken }: SpotifyPlayerProps) {
-  const [player, setPlayer] = useState<Spotify.Player | null>(null);
+  const [player, setPlayer] = useState<typeof SpotifyPlayer | null>(null);
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(null);
