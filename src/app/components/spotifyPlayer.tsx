@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 
+// Define more specific types for the Spotify Web Playback SDK
 interface SpotifyPlayerOptions {
   name: string;
   getOAuthToken: (cb: (token: string) => void) => void;
@@ -66,11 +67,9 @@ const SpotifyPlayer: React.FC<{ accessToken: string }> = ({ accessToken }) => {
     initializePlayer();
 
     return () => {
-      if (player) {
-        player.disconnect();
-      }
+      player?.disconnect();
     };
-  }, [accessToken]);
+  }, [accessToken, player]);
 
   const playTrack = (uri: string) => {
     if (player) {
