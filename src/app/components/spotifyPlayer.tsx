@@ -9,11 +9,26 @@ interface SpotifyPlayerOptions {
 }
 
 interface SpotifyPlayer {
-  addListener: (event: string, callback: (data: any) => void) => void;
+  addListener: <T>(event: string, callback: (data: T) => void) => void;
   connect: () => Promise<void>;
   disconnect: () => void;
   togglePlay: () => Promise<void>;
   play: (options: { uris: string[] }) => Promise<void>;
+}
+
+interface PlayerState {
+  paused: boolean;
+  position: number;
+  duration: number;
+  track_window: {
+    current_track: {
+      uri: string;
+      name: string;
+      artist: string;
+      album: string;
+      album_type: string;
+    };
+  };
 }
 
 declare global {
@@ -40,26 +55,44 @@ const SpotifyPlayer: React.FC<{ accessToken: string }> = ({ accessToken }) => {
         volume: 0.5,
       });
 
-      spotifyPlayer.addListener('initialization_error', ({ message }) => {
-        console.error('Initialization Error:', message);
-      });
-      spotifyPlayer.addListener('authentication_error', ({ message }) => {
-        console.error('Authentication Error:', message);
-      });
-      spotifyPlayer.addListener('account_error', ({ message }) => {
-        console.error('Account Error:', message);
-      });
-      spotifyPlayer.addListener('playback_error', ({ message }) => {
-        console.error('Playback Error:', message);
-      });
+      spotifyPlayer.addListener(
+        'initialization_error',
+        ({ message }: { message: string }) => {
+          console.error('Initialization Error:', message);
+        }
+      );
+      spotifyPlayer.addListener(
+        'authentication_error',
+        ({ message }: { message: string }) => {
+          console.error('Authentication Error:', message);
+        }
+      );
+      spotifyPlayer.addListener(
+        'account_error',
+        ({ message }: { message: string }) => {
+          console.error('Account Error:', message);
+        }
+      );
+      spotifyPlayer.addListener(
+        'playback_error',
+        ({ message }: { message: string }) => {
+          console.error('Playback Error:', message);
+        }
+      );
 
-      spotifyPlayer.addListener('player_state_changed', (state) => {
-        console.log('Player State Changed:', state);
-      });
-      spotifyPlayer.addListener('ready', ({ device_id }) => {
-        console.log('Player is ready:', device_id);
-        setPlayer(spotifyPlayer);
-      });
+      spotifyPlayer.addListener(
+        'player_state_changed',
+        (state: PlayerState) => {
+          console.log('Player State Changed:', state);
+        }
+      );
+      spotifyPlayer.addListener(
+        'ready',
+        ({ device_id }: { device_id: string }) => {
+          console.log('Player is ready:', device_id);
+          setPlayer(spotifyPlayer);
+        }
+      );
 
       spotifyPlayer.connect();
     };
