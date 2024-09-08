@@ -17,6 +17,9 @@ export async function GET(request: NextRequest) {
     body.append('client_id', process.env.SPOTIFY_CLIENT_ID || '');
     body.append('client_secret', process.env.SPOTIFY_CLIENT_SECRET || '');
 
+    console.log('Request URL:', 'https://accounts.spotify.com/api/token');
+    console.log('Request Body:', body.toString());
+
     // Exchange authorization code for an access token using fetch
     const tokenResponse = await fetch(
       'https://accounts.spotify.com/api/token',
@@ -30,6 +33,10 @@ export async function GET(request: NextRequest) {
     );
 
     if (!tokenResponse.ok) {
+      const errorText = await tokenResponse.text(); // Read the response text for detailed error info
+      console.error(
+        `Failed to fetch access token: ${tokenResponse.statusText}, Response: ${errorText}`
+      );
       throw new Error(
         `Failed to fetch access token: ${tokenResponse.statusText}`
       );
@@ -38,8 +45,9 @@ export async function GET(request: NextRequest) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    return NextResponse.json(accessToken);
+    return NextResponse.json({ accessToken });
   } catch (error) {
+    console.error('Failed to authenticate with Spotify:', error);
     return NextResponse.json({ error: 'Failed to authenticate with Spotify' });
   }
 }
