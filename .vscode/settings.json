@@ -1,6 +1,6 @@
 {
   "workbench.iconTheme": "vscode-icons",
-  "editor.fontFamily": "\"Fira Code, Consolas, 'Courier New', monospace\"",
+  "editor.fontFamily": "'Fira Code', Consolas, 'Courier New', monospace",
   "terminal.integrated.fontFamily": "monospace",
   "editor.fontLigatures": true,
   "files.autoSave": "onWindowChange",
