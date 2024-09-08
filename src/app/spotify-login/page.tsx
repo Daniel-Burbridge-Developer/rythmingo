@@ -6,11 +6,13 @@ export default function LoginPage() {
   const SPOTIFY_AUTH_URL = `https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.SPOTIFY_REDIRECT_URI || '')}&scope=user-read-private user-read-email`;
 
   useEffect(() => {
+    console.log('Use Effect Triggered');
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
     if (code) {
       // Fetch access token from the backend
+      console.log('Fetching from the backend');
       fetch(`/api/spotify/callback?code=${code}`)
         .then((response) => response.json())
         .then((data) => {
@@ -20,6 +22,7 @@ export default function LoginPage() {
             console.error('Failed to fetch access token:', data.error);
           }
         });
+      console.log('Fetched the data');
     }
   }, []);
   return (
