@@ -116,7 +116,7 @@ const SpotifyPlayer: React.FC<{ accessToken: string }> = ({ accessToken }) => {
 
   return (
     <div>
-      <button onClick={() => playTrack('spotify:track:3n3Ppam7vgaVa1iaRUc9Lp')}>
+      <button onClick={() => playTrack('spotify:track:405a3a03fa9a44ed')}>
         Play Track
       </button>
     </div>
