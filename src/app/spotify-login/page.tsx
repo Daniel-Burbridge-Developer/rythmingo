@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import SpotifyPlayer from '../components/spotifyPlayer';
 
 export default function LoginPage() {
   const [accessToken, setAccessToken] = useState('');
@@ -32,7 +33,7 @@ export default function LoginPage() {
           <button>Login with Spotify</button>
         </a>
       ) : (
-        <div>Logged in! Access Token: {accessToken}</div>
+        <SpotifyPlayer accessToken={accessToken} />
       )}
     </div>
   );
